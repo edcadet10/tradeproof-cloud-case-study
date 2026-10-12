@@ -6,7 +6,7 @@
 
 I built and supported the cloud environment behind TradeProof, a contractor license and insurance verification platform. My work covered infrastructure provisioning, container deployments, networking, identity, monitoring, database recovery and production troubleshooting.
 
-**[Read or download the four-page case study](TradeProof-Cloud-Platform-Case-Study.pdf)** · [Live platform](https://tradeproof.net) · [About TradeProof](https://tradeproof.net/about)
+**[Download the one-page overview](TradeProof-Cloud-Platform-Case-Study.pdf)** · [Live platform](https://tradeproof.net) · [About TradeProof](https://tradeproof.net/about)
 
 ## The project
 
