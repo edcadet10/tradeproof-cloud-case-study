@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Jeff Cadet">
+<meta name="description" content="A practical case study of TradeProof cloud infrastructure, production support and recovery work across Azure and Google Cloud.">
+<title>TradeProof — Cloud &amp; Platform Operations | Jeff Cadet</title>
+<style>
+:root{--ink:#142f40;--muted:#4c6575;--teal:#137763;--line:#dbe5e9;--pale:#f0f6f6;--navy:#102a3b}
+*{box-sizing:border-box}body{margin:0;background:#e6ecef;color:var(--ink);font:14px/1.55 Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:var(--teal);text-decoration:none}strong{font-weight:700}p{margin:0 0 12px}h1,h2,h3{line-height:1.12;margin:0}h1{font-size:49px;letter-spacing:-1.6px}h2{font-size:34px;letter-spacing:-.8px;margin:9px 0 15px}h3{font-size:18px;margin:0 0 9px}
+.page{width:210mm;height:297mm;margin:20px auto;background:white;padding:16mm 16mm 19mm;position:relative;overflow:hidden;break-after:page}
+.page:last-child{break-after:auto}.topline{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:25px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}.topline span:last-child{color:var(--muted);letter-spacing:.7px}
+.eyebrow{font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:12px}.lead{font-size:17px;line-height:1.5;color:var(--muted);margin:19px 0}.subhead{color:var(--muted);font-size:15px;margin-bottom:21px}.rule{width:52px;height:4px;background:var(--teal);margin:20px 0}
+.author{font-size:15px;margin:18px 0 21px}.author span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:23px 0}.stat{background:var(--pale);padding:17px 15px;border-top:3px solid var(--teal)}.stat b{display:block;font-size:30px;line-height:1.1;letter-spacing:-.7px}.stat span{font-size:11px;color:var(--muted);display:block;margin-top:9px;line-height:1.4}
+.diagram{width:100%;height:auto;display:block;margin:14px 0 8px}.caption{font-size:10px;color:var(--muted);line-height:1.45}.note{background:var(--pale);padding:15px 17px;border-left:3px solid var(--teal);margin:18px 0;font-size:12px;line-height:1.55}.note strong{color:var(--teal)}
+.footer{position:absolute;bottom:11mm;left:16mm;right:16mm;display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:9px;font-size:10px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{border:1px solid var(--line);padding:19px 20px;border-radius:5px}.panel h3{font-size:21px}.tag{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:var(--teal);font-weight:700;margin-bottom:9px}.panel ul{padding-left:16px;margin:12px 0 0}.panel li{margin:8px 0;font-size:12px;line-height:1.5}
+.section-label{font-size:12px;letter-spacing:1.1px;text-transform:uppercase;font-weight:700;color:var(--teal);margin:23px 0 12px}.work{padding:11px 0;border-top:1px solid var(--line)}.work b{font-size:14px;display:block;margin-bottom:4px}.work p{font-size:12px;line-height:1.5;margin:0;color:var(--muted)}
+.incident{padding:16px 0 17px;border-top:1px solid var(--line)}.incident h3{font-size:19px}.incident .number{display:inline-block;color:var(--teal);font-size:12px;margin-right:9px;vertical-align:middle}.incident p{font-size:12px;line-height:1.53;margin:8px 0}.incident .result{font-size:11px;background:var(--pale);padding:9px 12px;margin:10px 0 0;color:#295248}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:18px 0}.flow div{background:var(--navy);color:white;padding:13px 11px;font-size:12px;line-height:1.4}.flow b{display:block;color:#76e2c9;font-size:10px;letter-spacing:1px;margin-bottom:7px}
+table{border-collapse:collapse;width:100%;font-size:12px;line-height:1.5}th{text-align:left;background:var(--pale);font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:10px}td{padding:11px 10px;vertical-align:top;border-bottom:1px solid var(--line)}td:first-child{width:32%;font-weight:700}.small{font-size:11px;color:var(--muted);line-height:1.55}.links{margin-top:20px;padding:16px 18px;background:var(--navy);color:white}.links a{color:#83e6ce}.links strong{font-size:17px}.links p{font-size:11px;margin:8px 0 0}
+.page:first-child h1{font-size:46px}.page:first-child .topline{margin-bottom:20px}.page:first-child .lead{margin:15px 0}.page:first-child .author{margin:15px 0 17px}.stats{margin:17px 0}.note{padding:13px 17px;margin:16px 0}td{padding:10px}.flow{margin:16px 0}
+@page{size:A4;margin:0}@media print{body{background:white}.page{margin:0;box-shadow:none}}@media screen and (max-width:800px){.page{width:100%;height:auto;min-height:100vh;padding:28px 22px 70px;margin:0 0 12px;overflow:visible}.footer{left:22px;right:22px;bottom:20px}.two{grid-template-columns:1fr}.topline{font-size:9px}h1,.page:first-child h1{font-size:39px}h2{font-size:29px}.stat{padding:12px 9px}.stat b{font-size:24px}.flow{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<main>
+<section class="page" aria-label="Project overview">
+<div class="topline"><span>TradeProof</span><span>Cloud / Platform Support</span></div>
+<div class="eyebrow">A practical engineering case study</div>
+<h1>Building and operating<br>a cloud platform</h1>
+<p class="lead">Azure infrastructure. Google Cloud production.<br>Hands-on deployment, troubleshooting and recovery.</p>
+<div class="author"><strong>Jeff Cadet</strong><span>Cloud / Platform Support Engineer &nbsp;·&nbsp; October 2026</span></div>
+<p>I built and supported the cloud environment behind TradeProof, a contractor license and insurance verification platform. My responsibilities covered provisioning, containers, networking, identity, databases, monitoring and production support.</p>
+<div class="stats">
+<div class="stat"><b>9.5M</b><span>License records at the<br>October 8 launch capture</span></div>
+<div class="stat"><b>21</b><span>CI checks passed for the<br>October 11 release</span></div>
+<div class="stat"><b>2 clouds</b><span>Azure build and<br>Google Cloud operations</span></div>
+</div>
+<img class="diagram" src="assets/system-overview.svg" alt="Historical Azure build and current Google Cloud production platform overview">
+<p class="caption">Logical overview of services I worked with; private infrastructure details are omitted. The two clouds represent stages of the project, not an active-active deployment.</p>
+<div class="note"><strong>Project context.</strong> V1.2 was initially built on Azure, then released on Google Cloud on October 8, 2026. The older V1.1 service also ran on GCP; the final production cutover and data reconciliation occurred between those GCP environments.</div>
+<div class="footer"><span>Jeff Cadet &nbsp; / &nbsp; tradeproof.net</span><span>01 &nbsp; Overview</span></div>
+</section>
+<section class="page" aria-label="Infrastructure and operations responsibilities">
+<div class="topline"><span>TradeProof</span><span>Infrastructure and operations</span></div>
+<div class="eyebrow">Build, configure and support</div>
+<h2>Work across the platform</h2>
+<p class="subhead">From cloud resource configuration to the behavior of the running service.</p>
+<div class="two">
+<div class="panel"><div class="tag">Historical environment</div><h3>Microsoft Azure</h3><ul>
+<li>Built reusable <strong>Bicep</strong> modules and validated deployment changes.</li>
+<li>Deployed <strong>Container Apps and Jobs</strong>, with images in <strong>Azure Container Registry</strong>.</li>
+<li>Provisioned <strong>PostgreSQL Flexible Server</strong> with public network access disabled.</li>
+<li>Configured <strong>VNets, peering, private endpoints and private DNS</strong>.</li>
+<li>Worked with <strong>Key Vault, managed identities and scoped role assignments</strong>.</li>
+<li>Used <strong>Log Analytics</strong> to investigate application and scheduled-job failures.</li>
+</ul></div>
+<div class="panel"><div class="tag">October 2026 production</div><h3>Google Cloud</h3><ul>
+<li>Operated <strong>Linux Compute Engine</strong> hosts and containerized services.</li>
+<li>Published verified Docker images to <strong>Artifact Registry</strong> using immutable references.</li>
+<li>Managed private objects and backups in <strong>Cloud Storage</strong>.</li>
+<li>Maintained versioned recovery configuration in <strong>Secret Manager</strong>.</li>
+<li>Worked with <strong>IAM, Identity Platform and IAP</strong> for service and administrative access.</li>
+<li>Configured <strong>Cloud Monitoring</strong> uptime checks and alerts, with a confirmed delivery test.</li>
+</ul></div>
+</div>
+<div class="section-label">Day-to-day engineering responsibilities</div>
+<div class="two">
+<div>
+<div class="work"><b>Container and release support</b><p>Built images, checked runtime dependencies, diagnosed startup failures and verified health before activation.</p></div>
+<div class="work"><b>Networking and access</b><p>Troubleshot private connectivity, DNS, HTTPS routing, service identity and database permission failures.</p></div>
+<div class="work"><b>CI/CD and automation</b><p>Maintained GitHub Actions validation, automated API checks, secret scanning and image vulnerability scans.</p></div>
+</div>
+<div>
+<div class="work"><b>Database and recovery operations</b><p>Managed PostgreSQL migrations, permissions, backup verification and restores on isolated infrastructure.</p></div>
+<div class="work"><b>Security operations</b><p>Applied restricted runtime permissions, staff RBAC, passkey verification and audited access changes.</p></div>
+<div class="work"><b>Documentation and cost control</b><p>Maintained runbooks, reviewed compute/storage/CI usage and removed temporary recovery resources after verification.</p></div>
+</div>
+</div>
+<div class="note"><strong>Tools used:</strong> Linux, Docker, PostgreSQL, Bicep, GitHub Actions, Python, Bash, PowerShell, Cloudflare, Trivy and automated browser/API checks.</div>
+<div class="footer"><span>Jeff Cadet &nbsp; / &nbsp; Cloud and platform operations</span><span>02 &nbsp; Responsibilities</span></div>
+</section>
+<section class="page" aria-label="Troubleshooting examples">
+<div class="topline"><span>TradeProof</span><span>Production support</span></div>
+<div class="eyebrow">Symptom → diagnosis → verified fix</div>
+<h2>Three support investigations</h2>
+<p class="subhead">Examples of resolving the failure and checking the resulting behavior.</p>
+<article class="incident"><h3><span class="number">01 / AZURE</span>Provisioned, but failing at runtime</h3>
+<p><strong>Symptom:</strong> A scheduled Key Vault reminder job failed repeatedly even though the cloud resource reported successful provisioning.</p>
+<p><strong>Diagnosis:</strong> Log Analytics showed a missing Python module. The Key Vault SDK was installed for development but absent from the runtime image.</p>
+<p><strong>Action:</strong> Added the runtime dependency, rebuilt the image and verified imports inside the packaged container before deployment.</p>
+<p class="result"><strong>Verified result:</strong> A manual execution succeeded, followed by a successful scheduled run on July 3, 2026. Resource provisioning status alone was insufficient.</p>
+</article>
+<article class="incident"><h3><span class="number">02 / GCP</span>A backup upload that hid its failure</h3>
+<p><strong>Symptom:</strong> Cloud Storage contained checksum files without the corresponding database dump files.</p>
+<p><strong>Diagnosis:</strong> The Cloud SDK could not write local tracking files. The script used the subsequent checksum upload's successful exit status and removed the local dump.</p>
+<p><strong>Action:</strong> Set a writable SDK configuration directory, checked each upload result and required remote-object verification before deleting local staging files.</p>
+<p class="result"><strong>Verification:</strong> The revised workflow checked actual uploaded artifacts. Later isolated restores separately tested usable backups, database contents and application startup.</p>
+</article>
+<article class="incident"><h3><span class="number">03 / RECOVERY</span>Saved configuration no longer matched</h3>
+<p><strong>Symptom:</strong> Recovery configuration had drifted from the deployed services, and a backup manifest still referenced an older, stopped API container.</p>
+<p><strong>Diagnosis:</strong> Compared running containers and private configuration files with explicit Secret Manager versions and the backup manifest.</p>
+<p><strong>Action:</strong> Updated recovery versions and the backup reference while retaining the previous versions.</p>
+<p class="result"><strong>Verified result:</strong> All nine configuration files matched their cloud versions. Separate checks confirmed serving services, database permissions and schedules were unchanged.</p>
+</article>
+<div class="footer"><span>Source: dated project execution and recovery records</span><span>03 &nbsp; Troubleshooting</span></div>
+</section>
+<section class="page" aria-label="Release and recovery evidence">
+<div class="topline"><span>TradeProof</span><span>Release and recovery</span></div>
+<div class="eyebrow">Measured results, with scope</div>
+<h2>Verify before calling it done</h2>
+<p class="subhead">A release process that checks both the artifact and the running workload.</p>
+<div class="flow">
+<div><b>01 · VALIDATE</b>Tests, dependency checks and image scans</div>
+<div><b>02 · PREPARE</b>Image pins, backups and production canaries</div>
+<div><b>03 · ACTIVATE</b>Ordered deployment and health checks</div>
+<div><b>04 · VERIFY</b>Runtime readback and scheduled-job results</div>
+</div>
+<table aria-label="Dated release and recovery results"><thead><tr><th>Recorded result</th><th>What was verified</th></tr></thead><tbody>
+<tr><td>October 8 launch</td><td>Full source and target restores, data reconciliation, five healthy application services and public checks before closeout.</td></tr>
+<tr><td>21 CI checks passed</td><td>October 11 release. The 19 required branch checks and strict policy remained unchanged.</td></tr>
+<tr><td>8,879 backend tests</td><td>Passed for the same release, with reported test coverage of 89.04%.</td></tr>
+<tr><td>Image security checks</td><td>Zero fixable HIGH/CRITICAL findings in the exact API and web images under the existing scan policy.</td></tr>
+<tr><td>7m 43s recovery drill</td><td>September 26 isolated snapshot restore: five apps, public search/navigation and one quota-write check. Authenticated sessions and external-provider recovery were outside this result.</td></tr>
+</tbody></table>
+<div class="section-label">Operational decisions that mattered</div>
+<p class="small">The October 8 launch used a planned maintenance window. Once the target accepted production writes, the earlier source remained fenced against writes. A DNS-only reversal could not safely restore the earlier state; recovery required reconciliation.</p>
+<p class="small">The October 11 release checked canaries against production configuration, deployed dependencies in order, verified running image identities and observed a successful scheduled worker run. Synthetic API-key checks covered customer authentication behavior without using a live customer's quota.</p>
+<div class="note"><strong>Evidence scope.</strong> Compiled from project task closures, deployment records, CI output and recovery receipts reviewed on October 12, 2026. The figures describe those recorded events. They do not establish audited availability, SOC 2 certification or a guaranteed recovery time. Detailed operational records remain private.</div>
+<div class="links"><strong>Explore the project</strong><p><a href="https://tradeproof.net">tradeproof.net</a> &nbsp;·&nbsp; <a href="https://github.com/edcadet10/tradeproof-cloud-case-study">Public case study on GitHub</a></p><p>Jeff Cadet &nbsp; / &nbsp; Cloud / Platform Support Engineer</p></div>
+<div class="footer"><span>October 2026 &nbsp; / &nbsp; Selected completed work</span><span>04 &nbsp; Results and scope</span></div>
+</section>
+</main>
+</body>
+</html>

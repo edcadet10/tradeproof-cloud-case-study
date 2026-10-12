@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="510" viewBox="0 0 1120 510" role="img" aria-labelledby="title desc">
+<title id="title">TradeProof cloud platform overview</title>
+<desc id="desc">Historical Azure build with Bicep, Container Apps, PostgreSQL, Key Vault, managed identities and networking. Current Google Cloud production has Cloudflare routing to Docker applications and PostgreSQL on Compute Engine, with Artifact Registry, Secret Manager, Cloud Storage and Cloud Monitoring supporting operations.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#52727b"/></marker></defs>
+<rect width="1120" height="510" rx="18" fill="#f2f6f7"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<rect x="22" y="22" width="315" height="466" rx="14" fill="#ffffff" stroke="#d9e4e8"/>
+<text x="44" y="55" font-size="14" font-weight="700" fill="#627787" letter-spacing="1.2">AZURE · HISTORICAL BUILD</text>
+<text x="44" y="88" font-size="23" font-weight="700" fill="#132b3d">Provision and configure</text>
+<rect x="44" y="111" width="271" height="62" rx="9" fill="#eaf2ff"/>
+<text x="60" y="137" font-size="17" font-weight="700" fill="#163654">Bicep + GitHub Actions</text>
+<text x="60" y="159" font-size="14" fill="#3a566c">Validation and deployment checks</text>
+<text x="45" y="207" font-size="17" font-weight="700" fill="#132b3d">Application and data services</text>
+<text x="45" y="238" font-size="16" fill="#3a566c">Container Apps / Jobs</text>
+<text x="45" y="265" font-size="16" fill="#3a566c">Container Registry</text>
+<text x="45" y="292" font-size="16" fill="#3a566c">PostgreSQL Flexible Server</text>
+<line x1="44" y1="315" x2="315" y2="315" stroke="#d9e4e8"/>
+<text x="45" y="346" font-size="17" font-weight="700" fill="#132b3d">Access and operations</text>
+<text x="45" y="376" font-size="16" fill="#3a566c">Key Vault + managed identities</text>
+<text x="45" y="403" font-size="16" fill="#3a566c">VNets, peering, private DNS</text>
+<text x="45" y="430" font-size="16" fill="#3a566c">Private endpoints + Log Analytics</text>
+<text x="45" y="466" font-size="13" fill="#627787">Built before the move to GCP</text>
+<rect x="360" y="22" width="738" height="466" rx="14" fill="#ffffff" stroke="#c9e5df"/>
+<text x="382" y="55" font-size="14" font-weight="700" fill="#197366" letter-spacing="1.2">GOOGLE CLOUD · OCTOBER 2026 PRODUCTION</text>
+<rect x="382" y="75" width="205" height="58" rx="9" fill="#e8f5f1"/>
+<text x="399" y="100" font-size="15" font-weight="700" fill="#173b35">Browsers and API clients</text>
+<text x="399" y="121" font-size="13" fill="#43675f">Website and integrations</text>
+<path d="M590 104H622" stroke="#52727b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="629" y="75" width="447" height="58" rx="9" fill="#e8f5f1"/>
+<text x="648" y="100" font-size="17" font-weight="700" fill="#173b35">Cloudflare · DNS and HTTPS routing</text>
+<text x="648" y="121" font-size="13" fill="#43675f">Public traffic reaches the application services</text>
+<path d="M847 136V159" stroke="#52727b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="382" y="166" width="694" height="153" rx="10" fill="#f4f8fa" stroke="#d9e4e8"/>
+<text x="402" y="192" font-size="17" font-weight="700" fill="#132b3d">Compute Engine · Linux / Docker</text>
+<rect x="402" y="207" width="439" height="54" rx="7" fill="#ffffff" stroke="#d9e4e8"/>
+<text x="418" y="229" font-size="16" font-weight="700" fill="#183b50">Web · API · MCP · billing services</text>
+<text x="418" y="249" font-size="13" fill="#3a566c">Image pins, health checks and runtime restrictions</text>
+<path d="M844 235H869" stroke="#52727b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="877" y="207" width="178" height="54" rx="7" fill="#ffffff" stroke="#d9e4e8"/>
+<text x="891" y="230" font-size="16" font-weight="700" fill="#183b50">PostgreSQL</text>
+<text x="891" y="250" font-size="13" fill="#3a566c">Restricted workload roles</text>
+<text x="403" y="294" font-size="15" fill="#3a566c">Scheduled workers · systemd timers / cron · health and job verification</text>
+<text x="383" y="348" font-size="14" font-weight="700" fill="#627787" letter-spacing=".6">SUPPORTING CLOUD SERVICES</text>
+<rect x="382" y="362" width="333" height="49" rx="7" fill="#e8f5f1"/>
+<text x="397" y="384" font-size="15" font-weight="700" fill="#173b35">Artifact Registry + Secret Manager</text>
+<text x="397" y="402" font-size="13" fill="#43675f">Verified images and versioned configuration</text>
+<rect x="731" y="362" width="345" height="49" rx="7" fill="#e8f5f1"/>
+<text x="746" y="384" font-size="15" font-weight="700" fill="#173b35">Cloud Storage + Cloud Monitoring</text>
+<text x="746" y="402" font-size="13" fill="#43675f">Backups, restore evidence, uptime and alerts</text>
+<text x="383" y="443" font-size="15" fill="#3a566c">Identity Platform · scoped IAM · IAP administration</text>
+<text x="383" y="467" font-size="13" fill="#627787">Logical overview; private addresses and configuration are omitted.</text>
+</g></svg>
